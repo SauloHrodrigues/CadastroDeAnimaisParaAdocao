@@ -19,13 +19,13 @@ public class Animal {
     private Boolean disponivel;
     private LocalDate dataDeResgate;
 
-    public Animal(Long id, String nome, String especie, String raca, int idade, LocalDate dataDeResgate) {
+    public Animal(Long id, String nome, String especie, String raca, int idade, Boolean disponivel, LocalDate dataDeResgate) {
         this.id = id;
         this.nome = nome;
         this.especie = especie;
         this.raca = raca;
         this.idade = idade;
-        this.disponivel = true;
+        this.disponivel = disponivel;
         this.dataDeResgate = dataDeResgate;
     }
 
