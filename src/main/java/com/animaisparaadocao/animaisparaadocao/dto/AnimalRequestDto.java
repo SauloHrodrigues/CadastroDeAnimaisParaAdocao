@@ -1,6 +1,7 @@
 package com.animaisparaadocao.animaisparaadocao.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 
@@ -13,7 +14,7 @@ public record AnimalRequestDto(
         String raca,
         int idade,
         Boolean disponivel,
-        @NotBlank(message = "A data do resgate é campo de preenchimento obrigatório.")
+        @NotNull(message = "A data do resgate é campo de preenchimento obrigatório.")
         LocalDate dataDeResgate
 ) {
     public AnimalRequestDto {

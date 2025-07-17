@@ -19,6 +19,8 @@ public class Animal {
     private Boolean disponivel;
     private LocalDate dataDeResgate;
 
+    protected Animal(){}
+
     public Animal(String nome, String especie, String raca, int idade, Boolean disponivel, LocalDate dataDeResgate) {
         this.nome = nome;
         this.especie = especie;
@@ -97,7 +99,10 @@ public class Animal {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Animal animal)) return false;
-        return idade == animal.idade && Objects.equals(nome, animal.nome) && Objects.equals(especie, animal.especie) && Objects.equals(raca, animal.raca) && Objects.equals(dataDeResgate, animal.dataDeResgate);
+        return idade == animal.idade && Objects.equals(nome, animal.nome)
+                && Objects.equals(especie, animal.especie)
+                && Objects.equals(raca, animal.raca)
+                && Objects.equals(dataDeResgate, animal.dataDeResgate);
     }
 
     @Override
