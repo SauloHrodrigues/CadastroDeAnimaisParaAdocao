@@ -18,7 +18,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Object> handlerAnimalJaCadastradoException(AnimalJaCadastradoException excecao){
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse("Erro. ", excecao.getMessage()));
     }
-    @ExceptionHandler(AnimalJaCadastradoException.class)
+    @ExceptionHandler(AnimalNaoCadastradoException.class)
     public ResponseEntity<Object> handlerAnimalNaoCadastradoException(AnimalNaoCadastradoException excecao){
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse("Erro. ", excecao.getMessage()));
     }
