@@ -19,8 +19,7 @@ public class Animal {
     private Boolean disponivel;
     private LocalDate dataDeResgate;
 
-    public Animal(Long id, String nome, String especie, String raca, int idade, Boolean disponivel, LocalDate dataDeResgate) {
-        this.id = id;
+    public Animal(String nome, String especie, String raca, int idade, Boolean disponivel, LocalDate dataDeResgate) {
         this.nome = nome;
         this.especie = especie;
         this.raca = raca;
