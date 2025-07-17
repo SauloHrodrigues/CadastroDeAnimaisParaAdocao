@@ -6,9 +6,9 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 
 public interface AnimalService {
-    ResponseEntity<AnimalResponseDto> cadastrar(AnimalRequestDto dto);
-    ResponseEntity<List<AnimalResponseDto>> todosCadastrados();
-    ResponseEntity<AnimalResponseDto> buscarPorId(Long id );
-    ResponseEntity<AnimalResponseDto> atualizar(Long id);
-    ResponseEntity<AnimalResponseDto> apagar(Long id);
+    AnimalResponseDto cadastrar(AnimalRequestDto dto);
+    List<AnimalResponseDto> todosCadastrados();
+    AnimalResponseDto buscarPorId(Long id );
+    AnimalResponseDto atualizar(Long id);
+    AnimalResponseDto apagar(Long id);
 }
