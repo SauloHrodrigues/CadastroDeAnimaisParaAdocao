@@ -59,7 +59,7 @@ public class AnimalServiceImpl implements AnimalService {
         Optional<Animal> animal = repository.findOneByNomeIgnoreCaseAndEspecieIgnoreCaseAndRacaIgnoreCaseAndDataDeResgate(
                 nome,especie, raca, data);
         if (animal.isPresent()) {
-            throw new AnimalJaCadastradoException("O animal da espécie: " + especie + ", raça: " + raca + ", resgatado em: "
+            throw new AnimalJaCadastradoException("O animal: "+nome+", da espécie: " + especie + ", raça: " + raca + ", resgatado em: "
                     + data + " já esta cadastrado no banco.");
         }
     }
