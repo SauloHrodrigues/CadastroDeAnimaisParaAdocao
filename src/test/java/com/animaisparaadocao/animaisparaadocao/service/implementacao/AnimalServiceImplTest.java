@@ -49,7 +49,7 @@ class AnimalServiceImplTest {
 
     @Test
     @DisplayName("Deve realizar o cadastro de um novo animal.")
-    void cadastrar() {
+    void deveCadastrarUmNovoAnimalComSucesso() {
         Animal animal = AnimalFixture.entity(1L, cachorroRequest);
         AnimalResponseDto responseDto = AnimalFixture.response(animal);
 
@@ -67,7 +67,8 @@ class AnimalServiceImplTest {
     }
 
     @Test
-    void todosCadastrados() {
+    @DisplayName("Deve lançar exceção ao tentar cadastras animal já cadastrado.")
+    void deveLancarExecaoAoTentarCadastrarAnimalJaCadastrado() {
         Animal animal = AnimalFixture.entity(1L, gatoRequest);
         Mockito.when(repository.findOneByNomeIgnoreCaseAndEspecieIgnoreCaseAndRacaIgnoreCaseAndDataDeResgate(
                         gatoRequest.nome(), gatoRequest.especie(), gatoRequest.raca(), gatoRequest.dataDeResgate()))

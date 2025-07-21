@@ -28,6 +28,10 @@ public class AnimalFixture {
         return entidade;
     }
 
+    public static AnimalResponseDto response(Long id, AnimalRequestDto dto){
+        Animal animal = entity(id,dto);
+        return response(animal);
+    }
     public static AnimalResponseDto response(Animal animal){
         return new AnimalResponseDto(
                 animal.getId(), animal.getNome(), animal.getEspecie(), animal.getRaca(),
