@@ -6,6 +6,8 @@ import com.animaisparaadocao.animaisparaadocao.model.Animal;
 import jakarta.validation.constraints.NotBlank;
 import java.lang.reflect.Field;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AnimalFixture {
     public static AnimalRequestDto requestDto(String nome,String especie, String raca, int idade,
@@ -36,5 +38,13 @@ public class AnimalFixture {
         return new AnimalResponseDto(
                 animal.getId(), animal.getNome(), animal.getEspecie(), animal.getRaca(),
                 animal.getIdade(), animal.getDisponivel(),animal.getDataDeResgate());
+    }
+
+    public static List<AnimalResponseDto> response(List<Animal> animais){
+        List<AnimalResponseDto>responseDtos = new ArrayList<>();
+        for (Animal animal:animais){
+            responseDtos.add(response(animal));
+        }
+        return responseDtos;
     }
 }

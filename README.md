@@ -42,7 +42,7 @@ SPRING_DATASOURCE_PASSWORD=postgres
 
 ## Executando o projeto com Docker
 
-No terminal, na pasta do projeto, execute:
+No terminal, na sub-pasta (docker) do projeto, execute:
 
 ```bash
 docker-compose up --build

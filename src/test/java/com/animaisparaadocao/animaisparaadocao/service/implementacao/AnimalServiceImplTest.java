@@ -8,6 +8,8 @@ import com.animaisparaadocao.animaisparaadocao.mapper.AnimalMapper;
 import com.animaisparaadocao.animaisparaadocao.model.Animal;
 import com.animaisparaadocao.animaisparaadocao.repository.AnimalRepository;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -17,9 +19,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -86,8 +85,28 @@ class AnimalServiceImplTest {
     }
 
     @Test
-    void todosCadastrados01() {
+    @DisplayName("Deve retornar todos os animais cadastrados no banco.")
+    void deveRetornarTodosOsAnimaisCadastrados() {
+        Animal cachorro = AnimalFixture.entity(1L,cachorroRequest);
+        Animal gato = AnimalFixture.entity(2L,gatoRequest);
+        List<Animal>animais = new ArrayList<>();
+        animais.add(cachorro);
+        animais.add(gato);
+        List<AnimalResponseDto> responseDtos = new ArrayList<>();
+        responseDtos.add(AnimalFixture.response(cachorro));
+        responseDtos.add(AnimalFixture.response(gato));
 
+        Mockito.when(repository.findAll()).thenReturn(animais);
+        Mockito.when(mapper.toResponse(animais)).thenReturn(responseDtos);
+
+        List<AnimalResponseDto> resposta = service.todosCadastrados();
+
+        assertEquals(2,resposta.size());
+        assertEquals(cachorro.getNome(),resposta.get(0).nome());
+        assertEquals(gato.getNome(),resposta.get(1).nome());
+
+        Mockito.verify(repository).findAll();
+        Mockito.verify(mapper).toResponse(animais);
     }
 
     @Test

@@ -4,10 +4,12 @@ import com.animaisparaadocao.animaisparaadocao.dto.AnimalRequestDto;
 import com.animaisparaadocao.animaisparaadocao.dto.AnimalResponseDto;
 import com.animaisparaadocao.animaisparaadocao.exception.especies.AnimalJaCadastradoException;
 import com.animaisparaadocao.animaisparaadocao.fixture.AnimalFixture;
+import com.animaisparaadocao.animaisparaadocao.model.Animal;
 import com.animaisparaadocao.animaisparaadocao.service.AnimalService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDate;
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,8 +23,8 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -43,6 +45,9 @@ class AnimalControllerTest {
     private AnimalRequestDto cachorroRequest;
     private AnimalRequestDto gatoRequest;
     private AnimalRequestDto papagaioRequest;
+    private Animal cachorro;
+    private Animal gato;
+    private Animal papagaio;
 
     @BeforeEach
     void setUp() {
@@ -52,6 +57,10 @@ class AnimalControllerTest {
                 2, true, LocalDate.parse("2022-05-06"));
         papagaioRequest = AnimalFixture.requestDto("Catito", "ave", "shingling",
                 12, false, LocalDate.parse("2013-05-10"));
+
+        cachorro= AnimalFixture.entity(1L,cachorroRequest);
+        gato= AnimalFixture.entity(2L,gatoRequest);
+        papagaio= AnimalFixture.entity(3L,papagaioRequest);
 
     }
 
@@ -93,11 +102,24 @@ class AnimalControllerTest {
     }
 
     @Test
-    void cadastrar() {
-    }
+    @DisplayName("Deve retornar a lista com todos os animais já cadastrados")
+    void deveRetornarListaComTodosCadastrados() throws Exception {
+        List<Animal> animais = new ArrayList<>();
+        animais.add(cachorro);
+        animais.add(gato);
+        animais.add(papagaio);
 
-    @Test
-    void todosCadastrados() {
+        List<AnimalResponseDto> animaisResponse = AnimalFixture.response(animais);
+
+        when(service.todosCadastrados()).thenReturn(animaisResponse);
+
+        mockMvc.perform(get("/animais"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(3))
+                .andExpect(jsonPath("$.[0].id").value(cachorro.getId()))
+                .andExpect(jsonPath("$.[1].id").value(gato.getId()))
+                .andExpect(jsonPath("$.[2].id").value(papagaio.getId())
+                );
     }
 
     @Test

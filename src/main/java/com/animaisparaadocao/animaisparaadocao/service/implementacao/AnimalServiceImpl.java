@@ -32,7 +32,9 @@ public class AnimalServiceImpl implements AnimalService {
 
     @Override
     public List<AnimalResponseDto> todosCadastrados() {
-        return null;
+        List<Animal> animais = repository.findAll();
+        List<AnimalResponseDto> responseDto = mapper.toResponse(animais);
+        return responseDto;
     }
 
     @Override

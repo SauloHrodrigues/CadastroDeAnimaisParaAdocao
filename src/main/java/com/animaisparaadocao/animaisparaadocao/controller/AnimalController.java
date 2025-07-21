@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,8 +24,11 @@ public class AnimalController {
     public ResponseEntity<AnimalResponseDto> cadastrar(@Valid @RequestBody AnimalRequestDto dto){
         return ResponseEntity.status(HttpStatus.CREATED).body(service.cadastrar(dto));
     }
+
+    @GetMapping
     public ResponseEntity<List<AnimalResponseDto>> todosCadastrados(){
-        return null;
+        List<AnimalResponseDto>resposta = service.todosCadastrados();
+        return ResponseEntity.status(HttpStatus.OK).body(resposta);
     }
 
     public ResponseEntity<AnimalResponseDto> buscarPorId(Long id ){
