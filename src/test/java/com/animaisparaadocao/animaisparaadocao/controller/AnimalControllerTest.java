@@ -3,6 +3,7 @@ package com.animaisparaadocao.animaisparaadocao.controller;
 import com.animaisparaadocao.animaisparaadocao.dto.AnimalRequestDto;
 import com.animaisparaadocao.animaisparaadocao.dto.AnimalResponseDto;
 import com.animaisparaadocao.animaisparaadocao.exception.especies.AnimalJaCadastradoException;
+import com.animaisparaadocao.animaisparaadocao.exception.especies.AnimalNaoCadastradoException;
 import com.animaisparaadocao.animaisparaadocao.fixture.AnimalFixture;
 import com.animaisparaadocao.animaisparaadocao.model.Animal;
 import com.animaisparaadocao.animaisparaadocao.service.AnimalService;
@@ -19,10 +20,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -93,7 +90,7 @@ class AnimalControllerTest {
 
         when(service.cadastrar(request)).thenThrow(new AnimalJaCadastradoException(mensagemEsperada));
 
-        mockMvc.perform(post("/animais") // Verifique se o path correto é "/animal"
+        mockMvc.perform(post("/animais")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isConflict())
@@ -123,7 +120,40 @@ class AnimalControllerTest {
     }
 
     @Test
-    void buscarPorId() {
+    @DisplayName("Deve retornar um animal com determinado id, já cadastrado no banco.")
+    void buscarPorId() throws Exception {
+        Long idBuscado = gato.getId();
+        Animal animal = gato;
+        AnimalResponseDto responseDto= AnimalFixture.response(animal);
+
+        when(service.buscarPorId(idBuscado)).thenReturn(responseDto);
+
+        mockMvc.perform(get("/animais/{id}",idBuscado))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id").value(responseDto.id()))
+                .andExpect(jsonPath("$.nome").value(responseDto.nome()))
+                .andExpect(jsonPath("$.especie").value(responseDto.especie()))
+                .andExpect(jsonPath("$.raca").value(responseDto.raca()))
+                .andExpect(jsonPath("$.dataDeResgate").value(responseDto.dataDeResgate().toString())
+                );
+    }
+
+
+    @Test
+    @DisplayName("Deve lançar exceção de animal não encontrado ao buscar por id .")
+    void deveLancarExcecaoAoBuscarPorIdInvalido() throws Exception {
+        Long idBuscado = 1L;
+        AnimalRequestDto request = gatoRequest;
+        String mensagemEsperada = "O id: \'"
+                + idBuscado + "\' não corresponde a nenhum animal cadastrado no banco";
+
+        when(service.buscarPorId(idBuscado)).thenThrow(new AnimalNaoCadastradoException(mensagemEsperada));
+
+        mockMvc.perform(get("/animais/{id}",idBuscado))
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.mensagem").value(mensagemEsperada));
     }
 
     @Test

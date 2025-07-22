@@ -39,7 +39,8 @@ public class AnimalServiceImpl implements AnimalService {
 
     @Override
     public AnimalResponseDto buscarPorId(Long id) {
-        return null;
+        Animal animal = validaAnimalCadastrado(id);
+        return mapper.toResponse(animal);
     }
 
     @Override
@@ -52,8 +53,8 @@ public class AnimalServiceImpl implements AnimalService {
         return null;
     }
 
-    private void validaAnimalCadastrado(Long id) {
-        repository.findById(id).orElseThrow(() -> new AnimalNaoCadastradoException("O id: \'"
+    private Animal validaAnimalCadastrado(Long id) {
+        return repository.findById(id).orElseThrow(() -> new AnimalNaoCadastradoException("O id: \'"
                 + id + "\' não corresponde a nenhum animal cadastrado no banco"));
     }
 

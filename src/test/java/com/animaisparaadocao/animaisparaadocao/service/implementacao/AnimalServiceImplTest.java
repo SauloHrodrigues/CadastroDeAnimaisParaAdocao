@@ -3,6 +3,7 @@ package com.animaisparaadocao.animaisparaadocao.service.implementacao;
 import com.animaisparaadocao.animaisparaadocao.dto.AnimalRequestDto;
 import com.animaisparaadocao.animaisparaadocao.dto.AnimalResponseDto;
 import com.animaisparaadocao.animaisparaadocao.exception.especies.AnimalJaCadastradoException;
+import com.animaisparaadocao.animaisparaadocao.exception.especies.AnimalNaoCadastradoException;
 import com.animaisparaadocao.animaisparaadocao.fixture.AnimalFixture;
 import com.animaisparaadocao.animaisparaadocao.mapper.AnimalMapper;
 import com.animaisparaadocao.animaisparaadocao.model.Animal;
@@ -21,6 +22,8 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class AnimalServiceImplTest {
@@ -110,9 +113,44 @@ class AnimalServiceImplTest {
     }
 
     @Test
-    void buscarPorId() {
+    @DisplayName("Deve retornar um animal com determinado id, já cadastrado no banco.")
+    void deveBuscarAnimalPorId() {
+        Long id = 1L;
+        Animal animal = AnimalFixture.entity(id,papagaioRequest);
+        AnimalResponseDto response = AnimalFixture.response(animal);
+
+        when(repository.findById(id)).thenReturn(Optional.of(animal));
+        when(mapper.toResponse(animal)).thenReturn(response);
+
+        AnimalResponseDto resultado = service.buscarPorId(id);
+
+        assertEquals(id, resultado.id());
+        assertEquals(animal.getNome(),resultado.nome());
+        assertEquals(animal.getEspecie(),resultado.especie());
+        assertEquals(animal.getRaca(),resultado.raca());
+        assertEquals(animal.getDataDeResgate(),resultado.dataDeResgate());
+        assertEquals(animal.getDisponivel(),resultado.disponivel());
+
+        verify(repository).findById(id);
+        verify(mapper).toResponse(animal);
     }
 
+
+    @Test
+    @DisplayName("Deve lançar exceção de animal não encontrado ao buscar por id .")
+    void deveLancarExcecaoDeNaoEncontradoAoBuscarAnimalPorId() {
+        Long idBuscado = 0L;
+
+        when(repository.findById(idBuscado)).thenReturn(Optional.empty());
+
+        AnimalNaoCadastradoException resposta = assertThrows(AnimalNaoCadastradoException.class,
+        ()-> service.buscarPorId(idBuscado));
+
+        assertTrue(resposta.getMessage().contains("O id: '"+idBuscado+"' não corresponde a nenhum " +
+                "animal cadastrado no banco"));
+
+        verify(repository).findById(idBuscado);
+    }
     @Test
     void atualizar() {
     }
