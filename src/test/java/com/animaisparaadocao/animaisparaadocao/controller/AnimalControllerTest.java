@@ -1,5 +1,6 @@
 package com.animaisparaadocao.animaisparaadocao.controller;
 
+import com.animaisparaadocao.animaisparaadocao.dto.AnimalAtualizarDto;
 import com.animaisparaadocao.animaisparaadocao.dto.AnimalRequestDto;
 import com.animaisparaadocao.animaisparaadocao.dto.AnimalResponseDto;
 import com.animaisparaadocao.animaisparaadocao.exception.especies.AnimalJaCadastradoException;
@@ -23,6 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -157,8 +159,30 @@ class AnimalControllerTest {
     }
 
     @Test
-    void atualizar() {
+    @DisplayName("Deve atualizar um animal existente e retornar o DTO atualizado")
+    void atualizar() throws Exception {
+
+        Long idBuscado = gato.getId();
+        Animal animal = gato;
+        AnimalAtualizarDto atualizacoes = AnimalFixture.atualizarDto(
+                null,"cachorro","tomba-sanito",6,false,null);
+
+        AnimalResponseDto responseDto = AnimalFixture.response(animal);
+
+        when(service.atualizar(idBuscado, atualizacoes)).thenReturn(responseDto);
+
+        mockMvc.perform(put("/animais/{id}", idBuscado)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(atualizacoes)))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id").value(responseDto.id()))
+                .andExpect(jsonPath("$.nome").value(responseDto.nome()))
+                .andExpect(jsonPath("$.especie").value(responseDto.especie()))
+                .andExpect(jsonPath("$.raca").value(responseDto.raca()))
+                .andExpect(jsonPath("$.dataDeResgate").value(responseDto.dataDeResgate().toString()));
     }
+
 
     @Test
     void apagar() {

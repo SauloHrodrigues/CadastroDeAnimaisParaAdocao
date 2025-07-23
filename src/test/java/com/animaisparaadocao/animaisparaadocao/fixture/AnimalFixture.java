@@ -1,5 +1,6 @@
 package com.animaisparaadocao.animaisparaadocao.fixture;
 
+import com.animaisparaadocao.animaisparaadocao.dto.AnimalAtualizarDto;
 import com.animaisparaadocao.animaisparaadocao.dto.AnimalRequestDto;
 import com.animaisparaadocao.animaisparaadocao.dto.AnimalResponseDto;
 import com.animaisparaadocao.animaisparaadocao.model.Animal;
@@ -47,4 +48,35 @@ public class AnimalFixture {
         }
         return responseDtos;
     }
+
+    public static AnimalAtualizarDto atualizarDto(String nome, String especie,String raca,
+                                                  int idade, boolean disponivel,LocalDate dataDeResgate){
+
+        return new AnimalAtualizarDto(nome,especie,raca,idade,disponivel,dataDeResgate);
+    }
+    public static AnimalResponseDto response(Animal animal, AnimalAtualizarDto atualizacoes){
+
+        if ( atualizacoes.nome() != null ) {
+            animal.setNome( atualizacoes.nome() );
+        }
+        if ( atualizacoes.especie() != null ) {
+            animal.setEspecie( atualizacoes.especie() );
+        }
+        if ( atualizacoes.raca() != null ) {
+            animal.setRaca( atualizacoes.raca() );
+        }
+
+        if ( atualizacoes.idade() != 0 ) {
+            animal.setIdade( atualizacoes.idade());
+        }
+
+        if ( atualizacoes.disponivel() != null ) {
+            animal.setDisponivel( atualizacoes.disponivel() );
+        }
+        if ( atualizacoes.dataDeResgate() != null ) {
+            animal.setDataDeResgate( atualizacoes.dataDeResgate() );
+        }
+        return response(animal);
+    }
+
 }

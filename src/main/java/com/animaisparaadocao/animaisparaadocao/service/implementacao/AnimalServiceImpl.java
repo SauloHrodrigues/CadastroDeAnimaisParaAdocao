@@ -1,5 +1,6 @@
 package com.animaisparaadocao.animaisparaadocao.service.implementacao;
 
+import com.animaisparaadocao.animaisparaadocao.dto.AnimalAtualizarDto;
 import com.animaisparaadocao.animaisparaadocao.dto.AnimalRequestDto;
 import com.animaisparaadocao.animaisparaadocao.dto.AnimalResponseDto;
 import com.animaisparaadocao.animaisparaadocao.exception.especies.AnimalJaCadastradoException;
@@ -13,12 +14,12 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AnimalServiceImpl implements AnimalService {
 
-    @Autowired
-    private AnimalMapper mapper;
+    private AnimalMapper mapper = AnimalMapper.INSTANCE;
     @Autowired
     private AnimalRepository repository;
 
@@ -44,8 +45,11 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public AnimalResponseDto atualizar(Long id) {
-        return null;
+    public AnimalResponseDto atualizar(Long id, AnimalAtualizarDto atualizacoes) {
+        Animal animal = validaAnimalCadastrado(id);
+        mapper.updateAnimal(animal,atualizacoes);
+        repository.save(animal);
+        return mapper.toResponse(animal);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.animaisparaadocao.animaisparaadocao.controller;
 
+import com.animaisparaadocao.animaisparaadocao.dto.AnimalAtualizarDto;
 import com.animaisparaadocao.animaisparaadocao.dto.AnimalRequestDto;
 import com.animaisparaadocao.animaisparaadocao.dto.AnimalResponseDto;
 import com.animaisparaadocao.animaisparaadocao.service.AnimalService;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,8 +40,10 @@ public class AnimalController {
         return ResponseEntity.status(HttpStatus.OK).body(resposta);
     }
 
-    public ResponseEntity<AnimalResponseDto> atualizar(Long id){
-        return null;
+    @PutMapping("/{id}")
+    public ResponseEntity<AnimalResponseDto> atualizar(@PathVariable Long id, @Valid @RequestBody AnimalAtualizarDto atualizacoes){
+        AnimalResponseDto animalAtualizado = service.atualizar(id,atualizacoes);
+        return ResponseEntity.status(HttpStatus.OK).body(animalAtualizado);
     }
     public ResponseEntity<AnimalResponseDto> apagar(Long id){
         return null;
