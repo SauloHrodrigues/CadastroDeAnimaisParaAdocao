@@ -53,8 +53,9 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public AnimalResponseDto apagar(Long id) {
-        return null;
+    public void apagar(Long id) {
+        Animal animal = validaAnimalCadastrado(id);
+        repository.delete(animal);
     }
 
     private Animal validaAnimalCadastrado(Long id) {

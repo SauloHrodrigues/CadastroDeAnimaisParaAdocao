@@ -21,7 +21,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -185,6 +187,13 @@ class AnimalControllerTest {
 
 
     @Test
-    void apagar() {
+    @DisplayName("Deve deletar um animal existente e retornar status 204")
+    void deveDeletarAnimalComSucesso() throws Exception {
+        Long id = 1L;
+
+        mockMvc.perform(delete("/animais/{id}", id))
+                .andExpect(status().isNoContent());
+
+        verify(service).apagar(id);
     }
 }

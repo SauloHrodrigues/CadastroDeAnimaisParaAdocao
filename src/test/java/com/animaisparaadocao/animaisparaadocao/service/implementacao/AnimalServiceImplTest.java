@@ -174,4 +174,17 @@ class AnimalServiceImplTest {
         assertEquals(dtoAtualizacao.idade(), resultado.idade());
         assertEquals(animalExistente.getDataDeResgate(), resultado.dataDeResgate());
     }
+
+    @Test
+    @DisplayName("Deve apagar um animal existente no banco de dados")
+    void deveApagarAnimal(){
+        Long id = 1L;
+        Animal animal = AnimalFixture.entity(id,cachorroRequest);
+
+        when(repository.findById(id)).thenReturn(Optional.of(animal));
+
+        service.apagar(id);
+
+        verify(repository).delete(animal);
+    }
 }

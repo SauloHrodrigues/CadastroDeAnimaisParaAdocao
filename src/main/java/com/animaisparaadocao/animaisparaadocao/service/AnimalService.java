@@ -11,5 +11,5 @@ public interface AnimalService {
     List<AnimalResponseDto> todosCadastrados();
     AnimalResponseDto buscarPorId(Long id );
     AnimalResponseDto atualizar(Long id, AnimalAtualizarDto dto);
-    AnimalResponseDto apagar(Long id);
+    void apagar(Long id);
 }
