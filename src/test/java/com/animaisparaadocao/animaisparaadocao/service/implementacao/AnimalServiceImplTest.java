@@ -35,9 +35,6 @@ class AnimalServiceImplTest {
     private AnimalServiceImpl service;
     @Mock
     private AnimalRepository repository;
-//    @Mock
-//    private AnimalMapper mapper;
-
     private AnimalRequestDto cachorroRequest;
     private AnimalRequestDto gatoRequest;
     private AnimalRequestDto papagaioRequest;
@@ -56,12 +53,14 @@ class AnimalServiceImplTest {
     @Test
     @DisplayName("Deve realizar o cadastro de um novo animal.")
     void deveCadastrarUmNovoAnimalComSucesso() {
-        Animal animal = AnimalFixture.entity(1L, cachorroRequest);
+        AnimalRequestDto requestDto = cachorroRequest;
+        Animal animal = AnimalFixture.entity(1L, requestDto);
         AnimalResponseDto responseDto = AnimalFixture.response(animal);
 
-//        Mockito.when(mapper.toEntity(cachorroRequest)).thenReturn(animal);
+        Mockito.when(repository.findOneByNomeIgnoreCaseAndEspecieIgnoreCaseAndRacaIgnoreCaseAndDataDeResgate(
+                requestDto.nome(),requestDto.especie(),requestDto.raca(),requestDto.dataDeResgate()
+        )).thenReturn(Optional.empty());
         Mockito.when(repository.save(animal)).thenReturn(animal);
-//        Mockito.when(mapper.toResponse(animal)).thenReturn(responseDto);
 
         AnimalResponseDto resposta = service.cadastrar(cachorroRequest);
 
@@ -104,7 +103,6 @@ class AnimalServiceImplTest {
         responseDtos.add(AnimalFixture.response(gato));
 
         Mockito.when(repository.findAll()).thenReturn(animais);
-//        Mockito.when(mapper.toResponse(animais)).thenReturn(responseDtos);
 
         List<AnimalResponseDto> resposta = service.todosCadastrados();
 
@@ -113,7 +111,7 @@ class AnimalServiceImplTest {
         assertEquals(gato.getNome(), resposta.get(1).nome());
 
         Mockito.verify(repository).findAll();
-//        Mockito.verify(mapper).toResponse(animais);
+
     }
 
     @Test
@@ -124,7 +122,6 @@ class AnimalServiceImplTest {
         AnimalResponseDto response = AnimalFixture.response(animal);
 
         when(repository.findById(id)).thenReturn(Optional.of(animal));
-//        when(mapper.toResponse(animal)).thenReturn(response);
 
         AnimalResponseDto resultado = service.buscarPorId(id);
 
@@ -136,9 +133,7 @@ class AnimalServiceImplTest {
         assertEquals(animal.getDisponivel(), resultado.disponivel());
 
         verify(repository).findById(id);
-//        verify(mapper).toResponse(animal);
     }
-
 
     @Test
     @DisplayName("Deve lançar exceção de animal não encontrado ao buscar por id .")

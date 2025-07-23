@@ -27,8 +27,8 @@ public class AnimalServiceImpl implements AnimalService {
     public AnimalResponseDto cadastrar(AnimalRequestDto dto) {
         validaAnimalNaoCadastrado(dto.nome(), dto.especie(), dto.raca(), dto.dataDeResgate());
         Animal animal = mapper.toEntity(dto);
-        repository.save(animal);
-        return mapper.toResponse(animal);
+        Animal animalSalvo = repository.save(animal);
+        return mapper.toResponse(animalSalvo);
     }
 
     @Override
