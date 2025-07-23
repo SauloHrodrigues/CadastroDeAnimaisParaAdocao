@@ -1,19 +1,19 @@
-# CadastroDeAnimaisParaAdocao
+# API Cadastro de Animais para Adocao
 
-
-# Projeto Animais para Adoção
-
-Aplicação para gerenciamento de adoção de animais usando Spring Boot e PostgreSQL com Docker.
+A API foi desenvolvida para gerenciar o cadastro de animais para adoção. Seu contexto de desenvolvimento é o exercício
+de boas práticas de programação orientada a objeto, bem como a aplicação das arquiteturas de mercado. 
+Boas práticas utilizando padrões de projeto, princípios SOLID e conceitos de Clean Code, além do desenvolvimento de testes unitários e automatizados utilizando JUnit e Mockito.   
 
 ---
 
 ## Tecnologias usadas
 
-- Java 19+
+- Java 17
 - Spring Boot
 - PostgreSQL
 - Docker & Docker Compose
-
+- MapperStruct
+- Gernciador de dependências Maven
 ---
 
 ## Pré-requisitos
@@ -22,21 +22,37 @@ Aplicação para gerenciamento de adoção de animais usando Spring Boot e Postg
 - Docker Compose instalado (normalmente já vem com Docker Desktop)
 
 ---
+## Sobre o Projeto
+
+Trata-se de um projeto gerenciador de animais, contendo apenas um modulo: **Animal**.
+
+O sistema execulta a atribuições de um CRUD básico.
+
+Conta com uma única classe: **Animal** que possui os seguintes atributos:
+
+- id
+- nome
+- especie
+- raca
+- idade
+- disponivel
+- dataDeResgate
+
+O **id** é a chave primária que faz uso da estrategia **GenerationType.IDENTITY**, para persistir no banco de dados.
+
+---
+## Do Banco de Dados 
+
+O projeto faz uso do **postgres**, que deve se instalado em um container no docker;
+
+Na raiz do projeto, o arqivo .env contém todos os dados do banco.
+
+---
 
 ## Configuração do ambiente
 
-1. Crie um arquivo `.env` na raiz do projeto com as variáveis abaixo:
 
-```env
-POSTGRES_DB=banco_de_adocao
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=postgres
-SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/banco_de_adocao
-SPRING_DATASOURCE_USERNAME=postgres
-SPRING_DATASOURCE_PASSWORD=postgres
-```
-
-2. Verifique se o `docker-compose.yml` está na raiz e configurado para usar essas variáveis.
+O `docker-compose.yml` está na pasta docker na raiz do projeto, e configurado para usar as variáveis contidas no arquivo **.env**, já citado.
 
 ---
 
@@ -76,19 +92,7 @@ Se preferir rodar localmente, configure seu banco PostgreSQL e altere o arquivo 
 
 ## Testes
 
-Para rodar testes unitários, use:
-
-```bash
-./mvnw test
-```
-
-ou
-
-```bash
-mvn test
-```
-
-(se tiver Maven instalado)
+Realizei testes unitários utilizando JUnit e Mockito. Criei classes Fixitures para reutilização de código nos testes. Compreendo que testes são uma parte fundamental de uma aplicação.
 
 ---
 

@@ -22,5 +22,4 @@ public interface AnimalMapper {
     @Mapping(target = "id", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     Animal updateAnimal(@MappingTarget Animal animal, AnimalAtualizarDto atualizacoes);
-
 }
