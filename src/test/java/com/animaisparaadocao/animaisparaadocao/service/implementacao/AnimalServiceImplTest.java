@@ -20,6 +20,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -93,26 +97,27 @@ class AnimalServiceImplTest {
     @Test
     @DisplayName("Deve retornar todos os animais cadastrados no banco.")
     void deveRetornarTodosOsAnimaisCadastrados() {
+        // Arrange
         Animal cachorro = AnimalFixture.entity(1L, cachorroRequest);
         Animal gato = AnimalFixture.entity(2L, gatoRequest);
-        List<Animal> animais = new ArrayList<>();
-        animais.add(cachorro);
-        animais.add(gato);
-        List<AnimalResponseDto> responseDtos = new ArrayList<>();
-        responseDtos.add(AnimalFixture.response(cachorro));
-        responseDtos.add(AnimalFixture.response(gato));
 
-        Mockito.when(repository.findAll()).thenReturn(animais);
+        List<Animal> animais = List.of(cachorro, gato);
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Animal> pageAnimais = new PageImpl<>(animais, pageable, animais.size());
 
-        List<AnimalResponseDto> resposta = service.todosCadastrados();
+        Mockito.when(repository.findAll(any(Pageable.class))).thenReturn(pageAnimais);
 
-        assertEquals(2, resposta.size());
-        assertEquals(cachorro.getNome(), resposta.get(0).nome());
-        assertEquals(gato.getNome(), resposta.get(1).nome());
+        // Act
+        Page<AnimalResponseDto> resposta = service.todosCadastrados(pageable);
 
-        Mockito.verify(repository).findAll();
+        // Assert
+        assertEquals(2, resposta.getContent().size());
+        assertEquals(cachorro.getNome(), resposta.getContent().get(0).nome());
+        assertEquals(gato.getNome(), resposta.getContent().get(1).nome());
 
+        Mockito.verify(repository).findAll(any(Pageable.class));
     }
+
 
     @Test
     @DisplayName("Deve retornar um animal com determinado id, já cadastrado no banco.")

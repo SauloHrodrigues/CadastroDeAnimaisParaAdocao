@@ -18,9 +18,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -112,16 +117,21 @@ class AnimalControllerTest {
 
         List<AnimalResponseDto> animaisResponse = AnimalFixture.response(animais);
 
-        when(service.todosCadastrados()).thenReturn(animaisResponse);
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<AnimalResponseDto> pageResponse = new PageImpl<>(animaisResponse, pageable, animaisResponse.size());
 
-        mockMvc.perform(get("/animais"))
+        when(service.todosCadastrados(any(Pageable.class))).thenReturn(pageResponse);
+
+        mockMvc.perform(get("/animais")
+                        .param("page", "0")
+                        .param("size", "10"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(3))
-                .andExpect(jsonPath("$.[0].id").value(cachorro.getId()))
-                .andExpect(jsonPath("$.[1].id").value(gato.getId()))
-                .andExpect(jsonPath("$.[2].id").value(papagaio.getId())
-                );
+                .andExpect(jsonPath("$.content.length()").value(3))
+                .andExpect(jsonPath("$.content[0].id").value(cachorro.getId()))
+                .andExpect(jsonPath("$.content[1].id").value(gato.getId()))
+                .andExpect(jsonPath("$.content[2].id").value(papagaio.getId()));
     }
+
 
     @Test
     @DisplayName("Deve retornar um animal com determinado id, já cadastrado no banco.")
