@@ -13,6 +13,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -31,10 +34,9 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public List<AnimalResponseDto> todosCadastrados() {
-        List<Animal> animais = repository.findAll();
-        List<AnimalResponseDto> responseDto = mapper.toResponse(animais);
-        return responseDto;
+    public Page<AnimalResponseDto> todosCadastrados(Pageable pageable) {
+        Page<AnimalResponseDto> animais = repository.findAll(pageable).map(mapper::toResponse);
+        return animais;
     }
 
     @Override
