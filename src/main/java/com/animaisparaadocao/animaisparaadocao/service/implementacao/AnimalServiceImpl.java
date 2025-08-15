@@ -26,7 +26,7 @@ public class AnimalServiceImpl implements AnimalService {
     private AnimalRepository repository;
 
     @Override
-    public AnimalResponseDto cadastrar(AnimalRequestDto dto) {
+    public AnimalResponseDto cadastrarNovoAnimal(AnimalRequestDto dto) {
         validaAnimalNaoCadastrado(dto.nome(), dto.especie(), dto.raca(), dto.dataDeResgate());
         Animal animal = mapper.toEntity(dto);
         Animal animalSalvo = repository.save(animal);
@@ -34,19 +34,19 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public Page<AnimalResponseDto> todosCadastrados(Pageable pageable) {
+    public Page<AnimalResponseDto> retornaTodosAnimaisCadastrados(Pageable pageable) {
         Page<AnimalResponseDto> animais = repository.findAll(pageable).map(mapper::toResponse);
         return animais;
     }
 
     @Override
-    public AnimalResponseDto buscarPorId(Long id) {
+    public AnimalResponseDto buscarAnimalNoBancoPorId(Long id) {
         Animal animal = validaAnimalCadastrado(id);
         return mapper.toResponse(animal);
     }
 
     @Override
-    public AnimalResponseDto atualizar(Long id, AnimalAtualizarDto atualizacoes) {
+    public AnimalResponseDto atualizarDadosDoAnimal(Long id, AnimalAtualizarDto atualizacoes) {
         Animal animal = validaAnimalCadastrado(id);
         mapper.updateAnimal(animal,atualizacoes);
         repository.save(animal);
@@ -54,22 +54,20 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public void apagar(Long id) {
+    public void deletarAnimalDoBanco(Long id) {
         Animal animal = validaAnimalCadastrado(id);
         repository.delete(animal);
     }
 
     private Animal validaAnimalCadastrado(Long id) {
-        return repository.findById(id).orElseThrow(() -> new AnimalNaoCadastradoException("O id: \'"
-                + id + "\' não corresponde a nenhum animal cadastrado no banco"));
+        return repository.findById(id).orElseThrow(() -> new AnimalNaoCadastradoException(id));
     }
 
     private void validaAnimalNaoCadastrado(String nome, String especie, String raca, LocalDate data) {
         Optional<Animal> animal = repository.findOneByNomeIgnoreCaseAndEspecieIgnoreCaseAndRacaIgnoreCaseAndDataDeResgate(
                 nome,especie, raca, data);
         if (animal.isPresent()) {
-            throw new AnimalJaCadastradoException("O animal: "+nome+", da espécie: " + especie + ", raça: " + raca + ", resgatado em: "
-                    + data + " já esta cadastrado no banco.");
+            throw new AnimalJaCadastradoException(nome,especie,raca,data);
         }
     }
 }

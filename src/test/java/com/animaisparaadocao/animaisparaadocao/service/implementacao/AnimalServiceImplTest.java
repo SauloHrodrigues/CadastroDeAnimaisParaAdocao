@@ -9,7 +9,6 @@ import com.animaisparaadocao.animaisparaadocao.fixture.AnimalFixture;
 import com.animaisparaadocao.animaisparaadocao.model.Animal;
 import com.animaisparaadocao.animaisparaadocao.repository.AnimalRepository;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -66,7 +65,7 @@ class AnimalServiceImplTest {
         )).thenReturn(Optional.empty());
         Mockito.when(repository.save(animal)).thenReturn(animal);
 
-        AnimalResponseDto resposta = service.cadastrar(cachorroRequest);
+        AnimalResponseDto resposta = service.cadastrarNovoAnimal(cachorroRequest);
 
         assertEquals(1L, resposta.id());
         assertEquals(cachorroRequest.nome(), resposta.nome());
@@ -84,7 +83,7 @@ class AnimalServiceImplTest {
                 .thenReturn(Optional.of(animal));
 
         AnimalJaCadastradoException resposta = assertThrows(AnimalJaCadastradoException.class, () -> {
-            service.cadastrar(gatoRequest);
+            service.cadastrarNovoAnimal(gatoRequest);
         });
 
         assertTrue(resposta.getMessage().contains(gatoRequest.nome()));
@@ -108,7 +107,7 @@ class AnimalServiceImplTest {
         Mockito.when(repository.findAll(any(Pageable.class))).thenReturn(pageAnimais);
 
         // Act
-        Page<AnimalResponseDto> resposta = service.todosCadastrados(pageable);
+        Page<AnimalResponseDto> resposta = service.retornaTodosAnimaisCadastrados(pageable);
 
         // Assert
         assertEquals(2, resposta.getContent().size());
@@ -128,7 +127,7 @@ class AnimalServiceImplTest {
 
         when(repository.findById(id)).thenReturn(Optional.of(animal));
 
-        AnimalResponseDto resultado = service.buscarPorId(id);
+        AnimalResponseDto resultado = service.buscarAnimalNoBancoPorId(id);
 
         assertEquals(id, resultado.id());
         assertEquals(animal.getNome(), resultado.nome());
@@ -148,7 +147,7 @@ class AnimalServiceImplTest {
         when(repository.findById(idBuscado)).thenReturn(Optional.empty());
 
         AnimalNaoCadastradoException resposta = assertThrows(AnimalNaoCadastradoException.class,
-                () -> service.buscarPorId(idBuscado));
+                () -> service.buscarAnimalNoBancoPorId(idBuscado));
 
         assertTrue(resposta.getMessage().contains("O id: '" + idBuscado + "' não corresponde a nenhum " +
                 "animal cadastrado no banco"));
@@ -167,7 +166,7 @@ class AnimalServiceImplTest {
 
         when(repository.findById(id)).thenReturn(Optional.of(animalExistente));
 
-        AnimalResponseDto resultado = service.atualizar(id, dtoAtualizacao);
+        AnimalResponseDto resultado = service.atualizarDadosDoAnimal(id, dtoAtualizacao);
         System.out.println(resultado);
         assertNotNull(resultado);
         assertEquals(dtoAtualizacao.nome(), resultado.nome());
@@ -183,7 +182,7 @@ class AnimalServiceImplTest {
 
         when(repository.findById(id)).thenReturn(Optional.of(animal));
 
-        service.apagar(id);
+        service.deletarAnimalDoBanco(id);
 
         verify(repository).delete(animal);
     }

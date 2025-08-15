@@ -5,7 +5,6 @@ import com.animaisparaadocao.animaisparaadocao.dto.AnimalRequestDto;
 import com.animaisparaadocao.animaisparaadocao.dto.AnimalResponseDto;
 import com.animaisparaadocao.animaisparaadocao.service.AnimalService;
 import jakarta.validation.Valid;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,30 +28,30 @@ public class AnimalController {
 
     @PostMapping
     public ResponseEntity<AnimalResponseDto> cadastrar(@Valid @RequestBody AnimalRequestDto dto){
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.cadastrar(dto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.cadastrarNovoAnimal(dto));
     }
 
     @GetMapping
     public ResponseEntity<Page<AnimalResponseDto>> todosCadastrados(@PageableDefault(size = 10, sort = {"nome"})Pageable pageable){
-        Page<AnimalResponseDto>resposta = service.todosCadastrados(pageable);
+        Page<AnimalResponseDto>resposta = service.retornaTodosAnimaisCadastrados(pageable);
         return ResponseEntity.status(HttpStatus.OK).body(resposta);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<AnimalResponseDto> buscarPorId(@PathVariable Long id ){
-        AnimalResponseDto resposta = service.buscarPorId(id);
+        AnimalResponseDto resposta = service.buscarAnimalNoBancoPorId(id);
         return ResponseEntity.status(HttpStatus.OK).body(resposta);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<AnimalResponseDto> atualizar(@PathVariable Long id, @Valid @RequestBody AnimalAtualizarDto atualizacoes){
-        AnimalResponseDto animalAtualizado = service.atualizar(id,atualizacoes);
+        AnimalResponseDto animalAtualizado = service.atualizarDadosDoAnimal(id,atualizacoes);
         return ResponseEntity.status(HttpStatus.OK).body(animalAtualizado);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> apagar(@PathVariable Long id){
-        service.apagar(id);
+        service.deletarAnimalDoBanco(id);
         return ResponseEntity.noContent().build();
     }
 }

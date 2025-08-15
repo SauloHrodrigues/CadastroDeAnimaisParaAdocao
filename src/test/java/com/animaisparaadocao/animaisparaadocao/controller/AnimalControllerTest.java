@@ -77,7 +77,7 @@ class AnimalControllerTest {
         AnimalRequestDto requestDto = gatoRequest;
         AnimalResponseDto responseDto = AnimalFixture.response(1L,requestDto);
 
-        when(service.cadastrar(requestDto)).thenReturn(responseDto);
+        when(service.cadastrarNovoAnimal(requestDto)).thenReturn(responseDto);
 
         mockMvc.perform(post("/animais")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -97,7 +97,7 @@ class AnimalControllerTest {
                 + ", raça: " + request.raca() + ", resgatado em: "
                 + request.dataDeResgate() + " já esta cadastrado no banco.";
 
-        when(service.cadastrar(request)).thenThrow(new AnimalJaCadastradoException(mensagemEsperada));
+        when(service.cadastrarNovoAnimal(request)).thenThrow(new AnimalJaCadastradoException(mensagemEsperada));
 
         mockMvc.perform(post("/animais")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -120,7 +120,7 @@ class AnimalControllerTest {
         Pageable pageable = PageRequest.of(0, 10);
         Page<AnimalResponseDto> pageResponse = new PageImpl<>(animaisResponse, pageable, animaisResponse.size());
 
-        when(service.todosCadastrados(any(Pageable.class))).thenReturn(pageResponse);
+        when(service.retornaTodosAnimaisCadastrados(any(Pageable.class))).thenReturn(pageResponse);
 
         mockMvc.perform(get("/animais")
                         .param("page", "0")
@@ -140,7 +140,7 @@ class AnimalControllerTest {
         Animal animal = gato;
         AnimalResponseDto responseDto= AnimalFixture.response(animal);
 
-        when(service.buscarPorId(idBuscado)).thenReturn(responseDto);
+        when(service.buscarAnimalNoBancoPorId(idBuscado)).thenReturn(responseDto);
 
         mockMvc.perform(get("/animais/{id}",idBuscado))
                 .andExpect(status().isOk())
@@ -162,7 +162,7 @@ class AnimalControllerTest {
         String mensagemEsperada = "O id: \'"
                 + idBuscado + "\' não corresponde a nenhum animal cadastrado no banco";
 
-        when(service.buscarPorId(idBuscado)).thenThrow(new AnimalNaoCadastradoException(mensagemEsperada));
+        when(service.buscarAnimalNoBancoPorId(idBuscado)).thenThrow(new AnimalNaoCadastradoException(mensagemEsperada));
 
         mockMvc.perform(get("/animais/{id}",idBuscado))
                 .andExpect(status().isNotFound())
@@ -181,7 +181,7 @@ class AnimalControllerTest {
 
         AnimalResponseDto responseDto = AnimalFixture.response(animal);
 
-        when(service.atualizar(idBuscado, atualizacoes)).thenReturn(responseDto);
+        when(service.atualizarDadosDoAnimal(idBuscado, atualizacoes)).thenReturn(responseDto);
 
         mockMvc.perform(put("/animais/{id}", idBuscado)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -204,6 +204,6 @@ class AnimalControllerTest {
         mockMvc.perform(delete("/animais/{id}", id))
                 .andExpect(status().isNoContent());
 
-        verify(service).apagar(id);
+        verify(service).deletarAnimalDoBanco(id);
     }
 }
