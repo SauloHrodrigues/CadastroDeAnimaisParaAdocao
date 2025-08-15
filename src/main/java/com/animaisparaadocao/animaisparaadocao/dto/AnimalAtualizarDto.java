@@ -1,5 +1,6 @@
 package com.animaisparaadocao.animaisparaadocao.dto;
 
+import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 
@@ -10,6 +11,8 @@ public record AnimalAtualizarDto(
         String raca,
         Integer idade,
         Boolean disponivel,
+
+        @PastOrPresent(message = "A data não pode ser no futuro")
         LocalDate dataDeResgate
 ) {
 }
