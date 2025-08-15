@@ -15,7 +15,7 @@ public class Animal {
     private String nome;
     private String especie;
     private String raca;
-    private int idade;
+    private Integer idade;
     private Boolean disponivel;
     private LocalDate dataDeResgate;
 

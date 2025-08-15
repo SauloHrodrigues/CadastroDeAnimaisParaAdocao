@@ -12,7 +12,7 @@ public record AnimalRequestDto(
         @NotBlank(message = "A especie do animal é campo de preenchimento obrigatório.")
         String especie,
         String raca,
-        int idade,
+        Integer idade,
         Boolean disponivel,
         @NotNull(message = "A data do resgate é campo de preenchimento obrigatório.")
         LocalDate dataDeResgate

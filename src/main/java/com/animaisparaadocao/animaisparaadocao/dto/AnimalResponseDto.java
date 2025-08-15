@@ -8,7 +8,7 @@ public record AnimalResponseDto(
         String nome,
         String especie,
         String raca,
-        int idade,
+        Integer idade,
         Boolean disponivel,
         LocalDate dataDeResgate
 ) {}
