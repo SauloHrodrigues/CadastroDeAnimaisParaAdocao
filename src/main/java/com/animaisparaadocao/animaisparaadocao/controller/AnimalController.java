@@ -51,7 +51,7 @@ public class AnimalController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity apagar(@PathVariable Long id){
+    public ResponseEntity<Void> apagar(@PathVariable Long id){
         service.apagar(id);
         return ResponseEntity.noContent().build();
     }
