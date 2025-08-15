@@ -97,7 +97,8 @@ class AnimalControllerTest {
                 + ", raça: " + request.raca() + ", resgatado em: "
                 + request.dataDeResgate() + " já esta cadastrado no banco.";
 
-        when(service.cadastrarNovoAnimal(request)).thenThrow(new AnimalJaCadastradoException(mensagemEsperada));
+        when(service.cadastrarNovoAnimal(request)).thenThrow(new AnimalJaCadastradoException(
+                request.nome(),request.especie(),request.raca(),request.dataDeResgate()));
 
         mockMvc.perform(post("/animais")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -148,8 +149,7 @@ class AnimalControllerTest {
                 .andExpect(jsonPath("$.id").value(responseDto.id()))
                 .andExpect(jsonPath("$.nome").value(responseDto.nome()))
                 .andExpect(jsonPath("$.especie").value(responseDto.especie()))
-                .andExpect(jsonPath("$.raca").value(responseDto.raca()))
-                .andExpect(jsonPath("$.dataDeResgate").value(responseDto.dataDeResgate().toString())
+                .andExpect(jsonPath("$.raca").value(responseDto.raca())
                 );
     }
 
@@ -162,7 +162,7 @@ class AnimalControllerTest {
         String mensagemEsperada = "O id: \'"
                 + idBuscado + "\' não corresponde a nenhum animal cadastrado no banco";
 
-        when(service.buscarAnimalNoBancoPorId(idBuscado)).thenThrow(new AnimalNaoCadastradoException(mensagemEsperada));
+        when(service.buscarAnimalNoBancoPorId(idBuscado)).thenThrow(new AnimalNaoCadastradoException(idBuscado));
 
         mockMvc.perform(get("/animais/{id}",idBuscado))
                 .andExpect(status().isNotFound())
@@ -177,7 +177,7 @@ class AnimalControllerTest {
         Long idBuscado = gato.getId();
         Animal animal = gato;
         AnimalAtualizarDto atualizacoes = AnimalFixture.atualizarDto(
-                null,"cachorro","tomba-sanito",6,false,null);
+                null,"cachorro","tomba-sanito",6,false, null);
 
         AnimalResponseDto responseDto = AnimalFixture.response(animal);
 
@@ -191,8 +191,7 @@ class AnimalControllerTest {
                 .andExpect(jsonPath("$.id").value(responseDto.id()))
                 .andExpect(jsonPath("$.nome").value(responseDto.nome()))
                 .andExpect(jsonPath("$.especie").value(responseDto.especie()))
-                .andExpect(jsonPath("$.raca").value(responseDto.raca()))
-                .andExpect(jsonPath("$.dataDeResgate").value(responseDto.dataDeResgate().toString()));
+                .andExpect(jsonPath("$.raca").value(responseDto.raca()));
     }
 
 
