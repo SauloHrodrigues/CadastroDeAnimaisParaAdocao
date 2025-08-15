@@ -16,6 +16,8 @@ import org.mapstruct.factory.Mappers;
 public interface AnimalMapper {
 
     AnimalMapper INSTANCE = Mappers.getMapper(AnimalMapper.class);
+
+    @Mapping(target = "nome", expression = "java(dto.nome() != null ? dto.nome().toLowerCase() : null)")
     Animal toEntity(AnimalRequestDto dto);
     AnimalResponseDto toResponse(Animal animal);
     List<AnimalResponseDto> toResponse(List<Animal> animais);
