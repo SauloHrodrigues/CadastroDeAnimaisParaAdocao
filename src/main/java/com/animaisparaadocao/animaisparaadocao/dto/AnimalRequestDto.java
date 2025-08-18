@@ -18,10 +18,4 @@ public record AnimalRequestDto(
         @NotNull(message = "A data do resgate é campo de preenchimento obrigatório.")
         @PastOrPresent(message = "A data não pode ser no futuro")
         LocalDate dataDeResgate
-) {
-    public AnimalRequestDto {
-        if(disponivel ==null){
-            disponivel=true;
-        }
-    }
-}
+) {}

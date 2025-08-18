@@ -1,5 +1,6 @@
 package com.animaisparaadocao.animaisparaadocao.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,7 +17,8 @@ public class Animal {
     private String especie;
     private String raca;
     private Integer idade;
-    private Boolean disponivel;
+    @Column(nullable = false)
+    private Boolean disponivel = true;
     private LocalDate dataDeResgate;
 
     protected Animal(){}
