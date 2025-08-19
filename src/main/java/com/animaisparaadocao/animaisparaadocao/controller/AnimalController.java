@@ -27,24 +27,24 @@ public class AnimalController {
     private AnimalService service;
 
     @PostMapping
-    public ResponseEntity<AnimalResponseDto> cadastrar(@Valid @RequestBody AnimalRequestDto dto){
+    public ResponseEntity<AnimalResponseDto> cadastrarNovoAnimal(@Valid @RequestBody AnimalRequestDto dto){
         return ResponseEntity.status(HttpStatus.CREATED).body(service.cadastrarNovoAnimal(dto));
     }
 
     @GetMapping
-    public ResponseEntity<Page<AnimalResponseDto>> todosCadastrados(@PageableDefault(size = 10, sort = {"nome"})Pageable pageable){
+    public ResponseEntity<Page<AnimalResponseDto>> retornarTodosAnimaisCadastrados(@PageableDefault(size = 10, sort = {"nome"})Pageable pageable){
         Page<AnimalResponseDto>resposta = service.retornaTodosAnimaisCadastrados(pageable);
         return ResponseEntity.status(HttpStatus.OK).body(resposta);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AnimalResponseDto> buscarPorId(@PathVariable Long id ){
+    public ResponseEntity<AnimalResponseDto> buscarUmAnimalPorId(@PathVariable Long id ){
         AnimalResponseDto resposta = service.buscarAnimalNoBancoPorId(id);
         return ResponseEntity.status(HttpStatus.OK).body(resposta);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<AnimalResponseDto> atualizar(@PathVariable Long id, @Valid @RequestBody AnimalAtualizarDto atualizacoes){
+    public ResponseEntity<AnimalResponseDto> atualizarUmAnimal(@PathVariable Long id, @Valid @RequestBody AnimalAtualizarDto atualizacoes){
         AnimalResponseDto animalAtualizado = service.atualizarDadosDoAnimal(id,atualizacoes);
         return ResponseEntity.status(HttpStatus.OK).body(animalAtualizado);
     }

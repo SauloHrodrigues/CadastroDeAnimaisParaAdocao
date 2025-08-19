@@ -63,7 +63,7 @@ class AnimalServiceImplTest {
         Mockito.when(repository.findOneByNomeIgnoreCaseAndEspecieIgnoreCaseAndRacaIgnoreCaseAndDataDeResgate(
                 requestDto.nome(),requestDto.especie(),requestDto.raca(),requestDto.dataDeResgate()
         )).thenReturn(Optional.empty());
-        Mockito.when(repository.save(animal)).thenReturn(animal);
+        Mockito.when(repository.save(any(Animal.class))).thenReturn(animal);
 
         AnimalResponseDto resposta = service.cadastrarNovoAnimal(cachorroRequest);
 
